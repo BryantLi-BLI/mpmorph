@@ -16,8 +16,7 @@ newton        on
 read_data     data.dump 
 
 pair_style	  allegro
-pair_coeff    * * $__deployed_model_file__  $__species__
-mass          
+pair_coeff    * * $__deployed_model_file__  $__species__ 
 
 neighbor	  1.0 bin
 neigh_modify  delay 0 every 1 check no
@@ -39,11 +38,8 @@ variable p2 equal "temp"
 variable p3 equal "vol"
 variable p4 equal "density"
 variable p5 equal "etotal"
-variable p6 equal c_atomicenergies
-variable p7 equal "pe"
-variable p8 equal c_totalatomicenergy
 
-fix def1 all print $__print_every_n_step__ "${p1} ${p2} ${p3} ${p4} ${p5} ${p6} ${$__precision_const__ * p7} ${$__precision_const__ * p8}" file lammps_allegro_data.txt 
+fix def1 all print $__print_every_n_step__ "${p1} ${p2} ${p3} ${p4} ${p5} $($__precision_const__ * pe) $($__precision_const__ * c_atomicenergies) $($__precision_const__ * c_totalatomicenergy)" file lammps_allegro_data.txt 
 
 #print $($__precision_const__ * pe) file pe.dat
 #print $($__precision_const__ * c_totalatomicenergy) file totalatomicenergy.dat
