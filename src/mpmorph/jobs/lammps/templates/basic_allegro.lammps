@@ -9,24 +9,36 @@
 
 
 units         metal
-boundary      p p p
 atom_style    atomic
-newton        on
+dimension     3
 
-read_data     data.dump 
 
+# set newton on for pair_allegro (off for pair_nequip)
+newton on
+boundary p p p
+read_data data.dump
+
+# allegro pair style
 pair_style	  allegro
-pair_coeff    * * $__deployed_model_file__  $__species__ 
+pair_coeff    * * $__deployed_model_file__ $__species__ 
 
 neighbor	  1.0 bin
 neigh_modify  delay 0 every 1 check no
+
+timestep 0.001
+thermo 10
+
+# nose-hoover thermostat, 300K
+velocity      all create $__temperature__ 12345
+fix           myEnse all nvt temp $__temperature__ $__temperature__ 0.1
 
 # Record trajectory
 dump          myDump all custom 10 trajectory.lammpstrj id element x y z
 dump_modify   myDump sort id element $__species__
 
-velocity      all create $__temperature__ 12345
-fix           myEnse all npt temp $__temperature__ $__temperature__ 0.1 aniso 1.0 1.0 1.0
+run           $__total_steps__
+
+#excessive output
 
 timestep      0.002
 
@@ -47,10 +59,5 @@ fix def1 all print $__print_every_n_step__ "${p1} ${p2} ${p3} ${p4} ${p5} $($__p
 thermo_style  custom step time cpu pe ke etotal temp press vol density
 thermo        $__print_every_n_step__
 
-run           $__total_steps__ 
-
 write_dump all custom output.dump id type x y z fx fy fz c_atomicenergies modify format float %20.15g
         
-# Record trajectory
-dump          myDump all custom $__print_every_n_step__ trajectory.lammpstrj id element x y z
-dump_modify   myDump sort id element $species
