@@ -38,7 +38,7 @@ class BasicLammpsAllegro(Maker):
         }
 
         template_path = resource_filename(
-            "mpmorph", "jobs/lammps/templates/basic_allergo.lammps"
+            "mpmorph", "jobs/lammps/templates/basic_allegro.lammps"
         )
 
         run_lammps(structure, template_path, script_options, lammps_bin)
